@@ -1,0 +1,25 @@
+.chat__message {
+    display: flex;
+    word-break: break-word;
+    align-items: flex-start;
+}
+
+.chat__message:not(:last-child) {
+    margin-bottom: .7rem;
+}
+
+.chat__author {
+    height: 3.5rem;
+    width: 3.5rem;
+    margin-right: 1rem;
+    border-radius: 50%;
+    background-color: var(--secondary-main);
+    flex: 0 0 3.5rem;
+}
+
+.chat__text {
+    background-image: var(--secondary-gradient);
+    padding: .7rem 1.5rem;
+    border-radius: 1.5rem;
+    flex: 1;
+}

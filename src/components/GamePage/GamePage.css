@@ -1,0 +1,35 @@
+.game-page{
+
+    display: grid;
+    grid-template-columns:  2fr 1fr;
+    gap: 2rem;
+    height: 100%;
+}
+
+
+@media (max-width: 1300px) {
+    .game-page{
+
+        grid-template-columns: 600px 1fr;
+        margin: 2rem;
+    }
+
+
+}
+
+@media (max-width: 1000px) {
+
+    .game-page{
+        grid-template-columns: 1fr;
+    }
+
+
+}
+
+@media (max-width: 550px) {
+    .game-page{
+        grid-template-columns: 1fr;
+        margin: 1rem;
+    }
+
+}

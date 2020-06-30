@@ -1,0 +1,43 @@
+.Square {
+    position: relative;
+    width:  12.5%;
+    height: 100%;
+    display: inline-block;
+}
+.Square.light{
+    background-color: RGB(234,240,206);
+}
+.Square.dark{
+     background-color: RGB(187,190,100);
+ }
+
+.Square.red{
+    background-color: indianred;
+}
+
+.Dot{
+    position: absolute;
+    opacity: .7;
+    width: 25px;
+    height: 25px;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background-color: #10b0ff;
+    margin: auto;
+    z-index: 50;
+}
+
+
+@media (max-width: 1300px) {
+
+    .Dot{
+        width: 15px;
+        height: 15px;
+    }
+
+
+}
+

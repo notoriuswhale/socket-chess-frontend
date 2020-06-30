@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; }
+
+:root {
+  --main-color: #eeeeee;
+  --text-color: #777;
+  --secondary-light: #4791db;
+  --secondary-main: #1976d2;
+  --secondary-dark: #115293;
+  --secondary-gradient: linear-gradient(to right bottom, rgba(71, 145, 219, 0.2), rgba(25, 118, 210, 0.25));
+  --success-light: #81c784;
+  --success-main: #4caf50;
+  --success-dark: #388e3c; }
+
+html {
+  font-size: 62.5%;
+  color: var(--text-color);
+  font-family: sans-serif; }
+
+body {
+  background-color: var(--main-color);
+  min-height: 100vh;
+
+  /*grid-template-columns: 1fr 500px 1fr;*/
+  /*gap: 2rem; */
+}

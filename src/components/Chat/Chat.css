@@ -1,0 +1,67 @@
+
+.chat {
+    margin: auto;
+    margin-left: 1rem;
+    color: #444;
+    height: 45rem;
+    max-width: 35rem;
+    box-shadow: 1rem 1.5rem 2.5rem rgba(0, 0, 0, 0.1);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    border-radius: 2rem 2rem  1rem 1rem;
+    overflow: hidden;
+    font-size: 1.6rem; }
+.chat__header {
+    font-size: 2rem;
+    background-color: var(--secondary-main);
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(204, 204, 204, 0.31); }
+.chat__messages {
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    padding: 1.5rem; }
+
+.chat__controls {
+    border-top: 1px solid  #ccc;
+    display: flex;
+    padding: 1rem; }
+.chat__input {
+    min-width: 10rem;
+    box-shadow: 0.5rem 0.5rem 0.7rem rgba(0, 0, 0, 0.1);
+    outline: none;
+    border: 2px solid var(--secondary-main);
+    padding: 0 1.5rem;
+    margin-right: 1rem;
+    border-radius: 3rem;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    display: block;
+    flex: 1; }
+.chat__btn-send {
+    box-shadow: 0.5rem 0.5rem 0.7rem rgba(0, 0, 0, 0.1);
+    border-radius: 3rem;
+    font-family: inherit;
+    display: block;
+    font-size: inherit;
+    color: white;
+    background-color: var(--secondary-main);
+    padding: .75rem 1.5rem; }
+.chat__btn-send:hover {
+    box-shadow: 0.5rem 0.5rem 0.7rem rgba(0, 0, 0, 0.15); }
+
+@media (max-width: 1300px) {
+
+    .chat{
+        margin: auto;
+    }
+
+}
+
+
