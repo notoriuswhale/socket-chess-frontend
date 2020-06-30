@@ -1,0 +1,8 @@
+.chat__header {
+     font-size: 2rem;
+     background-color: var(--secondary-main);
+     color: white;
+     padding: 1rem 0;
+     text-align: center;
+     border-bottom: 1px solid rgba(204, 204, 204, 0.31);
+ }

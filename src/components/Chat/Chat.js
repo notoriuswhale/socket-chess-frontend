@@ -1,11 +1,14 @@
-import React, {useCallback, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import './Chat.css';
 import {ChatMessage} from "./ChatMessage/ChatMessage";
+import {ChatHeader} from "./ChatHeader/ChatHeader";
+import {ChatControls} from "./ChatControls/ChatControls";
 
 
 const Chat = (props) => {
 
-    let messageInput = useRef(null);
+    let inputRef = useRef(null);
+    let messagesEndRef = useRef(null);
 
     let [chatMessages, setChatMessages] = useState([]);
     let [chatMessage, setChatMessage] = useState('');
@@ -18,34 +21,31 @@ const Chat = (props) => {
         if (chatMessage.trim().length !== 0) {
             setChatMessages([...chatMessages, chatMessage]);
             setChatMessage('');
-            messageInput.current.focus();
+            inputRef.current.focus();
         }
 
     }, [chatMessage, chatMessages]);
 
-    const onKeyDown = useCallback((event) => {
-        if (event.key === 'Enter') {
-            onSend();
-        }
+    const scrollToBottom = () => {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    };
 
-    }, [onSend]);
+    useEffect(scrollToBottom, [chatMessages]);
 
 
     return (
         <div className="chat">
-            <h3 className="chat__header">
-                Chat
-            </h3>
+            <ChatHeader>Chat</ChatHeader>
             <div className="chat__messages">
                 {chatMessages.map((v, i) =>{
                     return <ChatMessage key={v+i}>{v}</ChatMessage>;
                 })}
-
+                <div ref={messagesEndRef} />
             </div>
-            <div className="chat__controls">
-                <input type="text" className="chat__input" value={chatMessage} onChange={onChange} onKeyDown={onKeyDown} ref={messageInput}/>
-                <buttton className="btn chat__btn-send" onClick={onSend}>Send</buttton>
-            </div>
+            <ChatControls onSend={onSend}
+                          onChange={onChange}
+                          chatMessage={chatMessage}
+                          inputRef={inputRef}/>
         </div>
     );
 };
