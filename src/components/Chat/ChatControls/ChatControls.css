@@ -31,5 +31,9 @@
 }
 
 .chat__btn-send:hover {
+    transform: translateY(-2px);
     box-shadow: 0.5rem 0.5rem 0.7rem rgba(0, 0, 0, 0.15);
+}
+.chat__btn-send:active {
+    transform: translateY(-1px);
 }

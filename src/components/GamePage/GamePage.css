@@ -1,8 +1,16 @@
 .game-page{
     display: grid;
     grid-template-columns:  2fr 1fr;
-    gap: 2rem;
+
     height: 100%;
+}
+
+.error{
+    height: 100vh;
+    font-size: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -11,9 +19,8 @@
 
         grid-template-columns: 600px 1fr;
         margin: 2rem;
+        gap: 2rem;
     }
-
-
 }
 
 @media (max-width: 1000px) {

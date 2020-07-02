@@ -1,3 +1,5 @@
+import * as constants from "../constants";
+
 const filterLegalMoves = (board, position, destination) => {
     let legalMove = true;
     let pathToDestination = board[position].pathToDestination(position, destination);
@@ -45,7 +47,7 @@ export const verifyChecked = (enemyMoves, king) => {
 
 //get all moves for ONE piece EXCLUDING those where you might get cheked
 export const getMoves = (board, piece, player, kingPosition) => {
-    const enemy = player === 1 ? 2 : 1;
+    const enemy = player === constants.WHITE ? constants.BLACK : constants.WHITE;
     let moves = findPossibleMoves(board, piece);
     //if place this filter inside findPossibleMoves then it would be recursion, cuz findAllMoves uses findPossibleMoves;
     //check if move leads to king beeing cheked and removes those moves

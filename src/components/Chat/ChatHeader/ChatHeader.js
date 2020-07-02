@@ -10,5 +10,4 @@ const ChatHeader = (props) => {
     );
 };
 
-
 export {ChatHeader};

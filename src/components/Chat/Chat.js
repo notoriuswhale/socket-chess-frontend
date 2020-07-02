@@ -5,32 +5,28 @@ import {ChatHeader} from "./ChatHeader/ChatHeader";
 import {ChatControls} from "./ChatControls/ChatControls";
 
 
-const Chat = (props) => {
+const Chat = ({sendMessage, chatMessages}) => {
 
-    let inputRef = useRef(null);
+    // let inputRef = useRef(null);
     let messagesEndRef = useRef(null);
-
-    let [chatMessages, setChatMessages] = useState([]);
     let [chatMessage, setChatMessage] = useState('');
-
-    const onChange = useCallback((event) => {
-        setChatMessage(event.target.value);
-    }, []);
-
-    const onSend = useCallback((event) => {
-        if (chatMessage.trim().length !== 0) {
-            setChatMessages([...chatMessages, chatMessage]);
-            setChatMessage('');
-            inputRef.current.focus();
-        }
-
-    }, [chatMessage, chatMessages]);
+    console.log('chat render');
 
     const scrollToBottom = () => {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
     };
+    const onChange = useCallback((event) => {
+        setChatMessage(event.target.value);
+    }, []);
 
+    const emptyField = () => setChatMessage('');
+
+    const onSend = (event) =>{
+        sendMessage(chatMessage, emptyField);
+    };
     useEffect(scrollToBottom, [chatMessages]);
+
+
 
 
     return (
@@ -38,14 +34,15 @@ const Chat = (props) => {
             <ChatHeader>Chat</ChatHeader>
             <div className="chat__messages">
                 {chatMessages.map((v, i) =>{
-                    return <ChatMessage key={v+i}>{v}</ChatMessage>;
+                    return <ChatMessage key={v+i} message={v}></ChatMessage>;
                 })}
                 <div ref={messagesEndRef} />
             </div>
             <ChatControls onSend={onSend}
                           onChange={onChange}
                           chatMessage={chatMessage}
-                          inputRef={inputRef}/>
+                          // inputRef={inputRef}
+            />
         </div>
     );
 };

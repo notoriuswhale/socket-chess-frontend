@@ -1,14 +1,16 @@
 import React, {useEffect, useReducer, useState} from "react";
 import {Board} from "../Board/Board";
 import {findAllMoves, getAllMoves, getMoves, verifyChecked} from "./helpers/helpers";
+import * as constants from './constants';
+import {socket} from "../../socket"
 
 class Pawn {
     constructor(player) {
         this.player = player;
         this.type = 'pawn';
         this.initialPositions = {
-            1: [48, 49, 50, 51, 52, 53, 54, 55],
-            2: [8, 9, 10, 11, 12, 13, 14, 15]
+            [constants.WHITE]: [48, 49, 50, 51, 52, 53, 54, 55],
+            [constants.BLACK]: [8, 9, 10, 11, 12, 13, 14, 15]
         }
     }
 
@@ -19,7 +21,7 @@ class Pawn {
         let destinationRow = Math.floor(destination / 8);
         let hasMoved = this.initialPositions[this.player].indexOf(position) !== -1;
 
-        if (this.player === 1) {
+        if (this.player === constants.WHITE) {
             if ((position - 8 === destination // check if move forvard is possible
                 || (hasMoved && position - 16 === destination)) //if first move check if move two squares is possible
                 && !isOccupied //
@@ -30,7 +32,7 @@ class Pawn {
 
         }
 
-        if (this.player === 2) {
+        if (this.player === constants.BLACK) {
             if ((position + 8 === destination
                 || (hasMoved && position + 16 === destination))
                 && !isOccupied
@@ -214,14 +216,14 @@ class King {
         let coordX2 = destination % 8;
         let coordY2 = Math.floor(destination / 8);
         switch (coordY2 * 8 + coordX2) {
-            case (coordY +1) * 8 + (coordX):
-            case (coordY ) * 8 + (coordX +1):
-            case (coordY +1 ) * 8 + (coordX -1):
-            case (coordY - 1) * 8 + (coordX  +1 ):
-            case (coordY + 1) * 8 + (coordX  + 1):
-            case (coordY - 1) * 8 + (coordX  -1):
-            case (coordY  -1 ) * 8 + (coordX ):
-            case (coordY ) * 8 + (coordX  -1):
+            case (coordY + 1) * 8 + (coordX):
+            case (coordY) * 8 + (coordX + 1):
+            case (coordY + 1) * 8 + (coordX - 1):
+            case (coordY - 1) * 8 + (coordX + 1):
+            case (coordY + 1) * 8 + (coordX + 1):
+            case (coordY - 1) * 8 + (coordX - 1):
+            case (coordY - 1) * 8 + (coordX):
+            case (coordY) * 8 + (coordX - 1):
                 isPossible = true;
                 break;
             default:
@@ -241,57 +243,76 @@ class King {
 function initializeGame() {
     let squares = new Array(64).fill(null);
     for (let i = 9; i < 17; i++) {
-        squares[64 - i] = new Pawn(1);
-        squares[i - 1] = new Pawn(2);
+        squares[64 - i] = new Pawn(constants.WHITE);
+        squares[i - 1] = new Pawn(constants.BLACK);
     }
 
-    squares[0] = new Rook(2);
-    squares[7] = new Rook(2);
-    squares[56] = new Rook(1);
-    squares[63] = new Rook(1);
+    squares[0] = new Rook(constants.BLACK);
+    squares[7] = new Rook(constants.BLACK);
+    squares[56] = new Rook(constants.WHITE);
+    squares[63] = new Rook(constants.WHITE);
 
-    squares[32] = new Queen(1);
+    squares[32] = new Queen(constants.WHITE);
 
-    squares[1] = new Knight(2);
-    squares[6] = new Knight(2);
-    squares[57] = new Knight(1);
-    squares[62] = new Knight(1);
+    squares[1] = new Knight(constants.BLACK);
+    squares[6] = new Knight(constants.BLACK);
+    squares[57] = new Knight(constants.WHITE);
+    squares[62] = new Knight(constants.WHITE);
 
-    squares[2] = new Bishop(2);
-    squares[5] = new Bishop(2);
-    squares[58] = new Bishop(1);
-    squares[61] = new Bishop(1);
+    squares[2] = new Bishop(constants.BLACK);
+    squares[5] = new Bishop(constants.BLACK);
+    squares[58] = new Bishop(constants.WHITE);
+    squares[61] = new Bishop(constants.WHITE);
 
-    squares[3] = new Queen(2);
-    squares[4] = new King(2);
+    squares[3] = new Queen(constants.BLACK);
+    squares[4] = new King(constants.BLACK);
 
-    squares[59] = new Queen(1);
-    squares[60] = new King(1);
+    squares[59] = new Queen(constants.WHITE);
+    squares[60] = new King(constants.WHITE);
 
     return squares;
 }
 
-const WHITE = 1;
-const DARK = 2;
-const DONE = 'DONE';
+function restoreGameBoard(board) {
 
+    return board.map((v) => {
+        if (!v) return null;
+        switch (v.type) {
+            case 'pawn':
+                return new Pawn(v.player);
+            case 'bishop':
+                return new Bishop(v.player);
+            case 'knight':
+                return new Knight(v.player);
+            case 'rook':
+                return new Rook(v.player);
+            case 'queen':
+                return new Queen(v.player);
+            case 'king':
+                return new King(v.player);
+            default:
+                return null;
+        }
+    })
 
-const initialBoardState = {
+}
+
+let initialBoardState = {
     board: initializeGame(),
-    whoMoves: WHITE,
-    enemy: DARK,
+    whoMoves: constants.WHITE,
+    enemy: constants.BLACK,
+    player: null,
     isChecked: null,
     kings: {
-        [WHITE]: 60,
-        [DARK]: 4
+        [constants.WHITE]: 60,
+        [constants.BLACK]: 4
     }
 };
 
 
 const boardReducer = (state, action) => {
-    console.log(state, action);
     switch (action.type) {
-        case 'MOVE':
+        case constants.MOVE:
             let newBoard = [...state.board];
             newBoard[action.position] = null;
             newBoard[action.destination] = state.board[action.position];
@@ -299,7 +320,6 @@ const boardReducer = (state, action) => {
             if (state.board[action.position].type === 'king') {
                 kings[state.whoMoves] = action.destination;
             }
-            console.log(kings);
             let isChecked;
             let allEnemyMoves = findAllMoves(newBoard, state.whoMoves);
             if (verifyChecked(allEnemyMoves, state.kings[state.enemy])) {
@@ -313,21 +333,75 @@ const boardReducer = (state, action) => {
                 isChecked: isChecked,
                 kings: kings,
             };
+        case constants.SET_PLAYER:
+            return {...state, player: action.player};
+        case 'SET_BOARD':
+            let receivedBoard = restoreGameBoard(action.board.board);
+            let newKings = {};
+            receivedBoard.forEach((v, i) => {
+                if (v?.type === 'king') {
+                    newKings[v.player] = i;
+                }
+            });
+
+            let isChecked2;
+            let allEnemyMoves2 = findAllMoves(receivedBoard, action.board.whoMoves === constants.WHITE ? constants.BLACK : constants.WHITE);
+            if (verifyChecked(allEnemyMoves2, newKings[action.board.whoMoves])) {
+                isChecked2 = action.board.whoMoves;
+            } else isChecked2 = null;
+
+            return {
+                ...state,
+                board: receivedBoard,
+                whoMoves: action.board.whoMoves,
+                enemy: action.board.whoMoves === constants.WHITE ? constants.BLACK : constants.WHITE,
+                kings: newKings,
+                isChecked: isChecked2,
+            };
+
         default:
             throw new Error('boardReducer error')
     }
 };
 
 
-const Game = (props) => {
+const Game = ({player, restoredBoardState}) => {
+    if (restoredBoardState) {
+        initialBoardState = restoredBoardState;
+        initialBoardState.player = player;
+        initialBoardState.board = restoreGameBoard(restoredBoardState.board)
+    }
 
     let [boardState, boardDispatch] = useReducer(boardReducer, initialBoardState);
 
     let [selected, setSelected] = useState(null);
     let [gameState, setGameState] = useState(null);
 
-    useEffect(()=> {
-        if (getAllMoves(boardState.board, boardState.whoMoves, boardState.kings[boardState.whoMoves]).length === 0) setGameState(DONE);
+    useEffect(() => {
+        socket.emit('startGame', initialBoardState, () => {
+            // if (board) boardDispatch({type: 'SET_BOARD', board})
+        });
+
+        socket.on('move', ({position, destination}) => {
+            boardDispatch({
+                type: constants.MOVE,
+                position: position,
+                destination: destination
+            });
+            setSelected(null);
+        })
+    }, []);
+
+    useEffect(() => {
+        boardDispatch({type: constants.SET_PLAYER, player});
+    }, [player]);
+
+    useEffect(() => {
+        if (boardState.player === boardState.enemy) socket.emit('updateBoardState', boardState, () => {
+        });
+        if (getAllMoves(boardState.board, boardState.whoMoves, boardState.kings[boardState.whoMoves]).length === 0) {
+            setGameState(constants.DONE);
+        }
     }, [boardState]);
 
 
@@ -339,13 +413,13 @@ const Game = (props) => {
 
     const onClickHandler = (index) => {
         // if game ended do nothind
-        if (gameState === DONE) return;
+        if (gameState === constants.DONE || boardState.player !== boardState.whoMoves) return;
         //if not selected and there is a pice on square then select
         if (selected === null && boardState.board[index]?.player === boardState.whoMoves) {
             setSelected(index);
             return;
         }
-        if(boardState.board[index]?.player === boardState.board[selected]?.player && index !== selected){
+        if (boardState.board[index]?.player === boardState.board[selected]?.player && index !== selected) {
             setSelected(index);
             return;
         }
@@ -356,19 +430,26 @@ const Game = (props) => {
 
         // else move piece
         else {
-            boardDispatch({
-                type: 'MOVE',
+            socket.emit('move', {
                 position: selected,
-                destination: index
+                destination: index,
+                whoMoves: boardState.enemy
+            }, () => {
             });
-            setSelected(null);
+
+            // boardDispatch({
+            //     type: constants.MOVE,
+            //     position: selected,
+            //     destination: index
+            // });
+            // setSelected(null);
         }
     };
     return (
         <>
             <Board squares={boardState.board} possibleMoves={possibleMoves} onClickHandler={onClickHandler}
-                   isChecked={boardState.isChecked}/>
-            {gameState && <div>GAME ENDED: {boardState.enemy === WHITE ? 'WHITE' : 'BLACK'} WINS</div>}
+                   isChecked={boardState.isChecked} player={boardState.player}/>
+            {gameState && <div>GAME ENDED: {boardState.enemy === constants.WHITE ? 'WHITE' : 'BLACK'} WINS</div>}
         </>
 
     );

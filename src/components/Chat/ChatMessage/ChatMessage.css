@@ -13,8 +13,17 @@
     width: 3.5rem;
     margin-right: 1rem;
     border-radius: 50%;
+    border: 2px solid black;
     background-color: var(--secondary-main);
     flex: 0 0 3.5rem;
+}
+
+.chat__author-white{
+    background-color: white;
+}
+
+.chat__author-black{
+    background-color: black;
 }
 
 .chat__text {
@@ -23,3 +32,18 @@
     border-radius: 1.5rem;
     flex: 1;
 }
+
+.chat__message-system {
+    text-align: center;
+}
+
+.chat__message-system .chat__author {
+    display: none;
+}
+
+.chat__message-system .chat__text {
+    background-image: none
+}
+
+
+
