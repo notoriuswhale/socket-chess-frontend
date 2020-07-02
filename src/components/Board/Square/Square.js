@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './Square.module.css'
 import {Piece} from "../Piece/Piece";
-import * as constants from "../../Game/constants";
+import * as constants from "../../../constants";
 
 const Square = (props) => {
     let classes = [styles.Square];

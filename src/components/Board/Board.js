@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './Board.module.css'
 import {Square} from "./Square/Square";
-import * as constants from "../Game/constants";
+import * as constants from "../../constants";
 
 
 const Board = (props) => {

@@ -1,4 +1,5 @@
 import * as constants from "../constants";
+import {Bishop, King, Knight, Pawn, Queen, Rook} from "./gamePieces";
 
 const filterLegalMoves = (board, position, destination) => {
     let legalMove = true;
@@ -75,3 +76,63 @@ export const  getAllMoves = (board, player, kingPosition) => {
     }
     return moves.flat();
 };
+
+
+
+export function initializeGame(initialState) {
+    if(initialState) return restoreGameBoard(initialState);
+
+    let squares = new Array(64).fill(null);
+    for (let i = 9; i < 17; i++) {
+        squares[64 - i] = new Pawn(constants.WHITE);
+        squares[i - 1] = new Pawn(constants.BLACK);
+    }
+
+    squares[0] = new Rook(constants.BLACK);
+    squares[7] = new Rook(constants.BLACK);
+    squares[56] = new Rook(constants.WHITE);
+    squares[63] = new Rook(constants.WHITE);
+
+    squares[32] = new Queen(constants.WHITE);
+
+    squares[1] = new Knight(constants.BLACK);
+    squares[6] = new Knight(constants.BLACK);
+    squares[57] = new Knight(constants.WHITE);
+    squares[62] = new Knight(constants.WHITE);
+
+    squares[2] = new Bishop(constants.BLACK);
+    squares[5] = new Bishop(constants.BLACK);
+    squares[58] = new Bishop(constants.WHITE);
+    squares[61] = new Bishop(constants.WHITE);
+
+    squares[3] = new Queen(constants.BLACK);
+    squares[4] = new King(constants.BLACK);
+
+    squares[59] = new Queen(constants.WHITE);
+    squares[60] = new King(constants.WHITE);
+
+    return squares;
+}
+
+export function restoreGameBoard(board) {
+
+    return board.map((v) => {
+        if (!v) return null;
+        switch (v.type) {
+            case 'pawn':
+                return new Pawn(v.player);
+            case 'bishop':
+                return new Bishop(v.player);
+            case 'knight':
+                return new Knight(v.player);
+            case 'rook':
+                return new Rook(v.player);
+            case 'queen':
+                return new Queen(v.player);
+            case 'king':
+                return new King(v.player);
+            default:
+                return null;
+        }
+    })
+}
