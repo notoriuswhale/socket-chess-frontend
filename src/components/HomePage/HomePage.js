@@ -13,7 +13,7 @@ const HomePage = (props) => {
             <main className="section-main">
                 <nav className="navigation">
                     <ul className="navigation__list">
-                        <Link className='navigation__link' to='/game' >New Game</Link>
+                        <Link className='navigation__link' to='/game?room=base' >New Game</Link>
                     </ul>
                 </nav>
             </main>

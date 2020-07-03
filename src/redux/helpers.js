@@ -14,10 +14,10 @@ const filterLegalMoves = (board, position, destination) => {
 //returns all movese for ONE piece including those leading to check
 export const findPossibleMoves = (board, piecePosition) => {
     let moves = [];
-    if(!board[piecePosition]) return [];
+    if (!board[piecePosition]) return [];
     for (let destination = 0; destination < board.length; destination++) {
         //if pieces on square belong to one player - continue
-        if ( board[piecePosition]?.player === board[destination]?.player) continue;
+        if (board[piecePosition]?.player === board[destination]?.player) continue;
         if (board[piecePosition].isMovePossible(piecePosition, destination, Boolean(board[destination]))) {
             if (filterLegalMoves(board, piecePosition, destination)) {
                 moves.push(destination);
@@ -66,7 +66,7 @@ export const getMoves = (board, piece, player, kingPosition) => {
 };
 
 //get all  moves for all pieces to check if game ended;
-export const  getAllMoves = (board, player, kingPosition) => {
+export const getAllMoves = (board, player, kingPosition) => {
     let moves = [];
     let myPieces = board.filter((val) => val !== null && val.player === player);
     let myCoords = myPieces.map((v) => board.indexOf(v));
@@ -78,9 +78,8 @@ export const  getAllMoves = (board, player, kingPosition) => {
 };
 
 
-
 export function initializeGame(initialState) {
-    if(initialState) return restoreGameBoard(initialState);
+    if (initialState) return restoreGameBoard(initialState);
 
     let squares = new Array(64).fill(null);
     for (let i = 9; i < 17; i++) {

@@ -10,11 +10,9 @@ export class Pawn {
         }
     }
 
-    toJSON(){
+    toJSON() {
         // let result = `{player:${this.player},type:${this.type}}`;
-        let result = {player: this.player,type: this.type};
-        console.log(result);
-        return result;
+        return {player: this.player, type: this.type};
     }
 
     isMovePossible(position, destination, isOccupied) {

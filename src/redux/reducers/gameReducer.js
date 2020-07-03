@@ -57,9 +57,10 @@ export const gameReducer = (state = initialBoardState, action) => {
 };
 
 export const kingsSelector = (state) => {
-    let kings = {[constants.WHITE]: null, [constants.BLACK]:null};
+    if(state.board.length === 0) return {};
+    let kings = {[constants.WHITE]: null, [constants.BLACK]: null};
     state.board.forEach((piece, index) => {
-        if(piece?.type === 'king'){
+        if (piece?.type === 'king') {
             kings[piece.player] = index
         }
     });
@@ -67,6 +68,7 @@ export const kingsSelector = (state) => {
 };
 
 export const isCheckedSelector = (state) => {
+    if(state.board.length === 0) return null;
     let isChecked;
     let allEnemyMoves = findAllMoves(state.board, state.enemy);
     if (verifyChecked(allEnemyMoves, kingsSelector(state)[state.whoMoves])) {
@@ -77,6 +79,7 @@ export const isCheckedSelector = (state) => {
 
 
 export const possibleMovesSelector = (state) => {
+    if(state.board.length === 0) return [];
     if (state.selected !== null) {
         return getMoves(state.board, state.selected, state.whoMoves, kingsSelector(state)[state.whoMoves]);
     } else {
@@ -85,6 +88,7 @@ export const possibleMovesSelector = (state) => {
 };
 
 export const gameStateSelector = (state) => {
+    if(state.board.length === 0) return null;
     if (getAllMoves(state.board, state.whoMoves, kingsSelector(state)[state.whoMoves]).length === 0) {
         return constants.DONE;
     } else return null;
