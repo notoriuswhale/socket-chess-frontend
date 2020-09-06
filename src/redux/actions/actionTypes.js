@@ -6,3 +6,7 @@ export const MOVE = 'MOVE';
 export const SET_PLAYER = 'SET_PLAYER';
 export const SELECT = 'SELECT';
 export const UNSELECT = 'UNSELECT';
+
+
+//CHAT
+

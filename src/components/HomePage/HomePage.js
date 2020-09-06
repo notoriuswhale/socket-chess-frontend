@@ -13,7 +13,10 @@ const HomePage = (props) => {
             <main className="section-main">
                 <nav className="navigation">
                     <ul className="navigation__list">
-                        <Link className='navigation__link' to='/game?room=base' >New Game</Link>
+                        <li className={'navigation__item'}><Link className='navigation__link' to='/game?random=true'>Play with
+                            random Player</Link></li>
+                        <li className={'navigation__item'}><Link className='navigation__link' to='/game?random=false'>Play with
+                            Friend</Link></li>
                     </ul>
                 </nav>
             </main>

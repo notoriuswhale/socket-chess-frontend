@@ -34,6 +34,7 @@
 }
 
 .navigation__link {
+    text-align: center;
     padding: 1.5rem 4rem;
     border-radius: .5rem;
     display: block;

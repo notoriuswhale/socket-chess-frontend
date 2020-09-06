@@ -38,7 +38,7 @@ const pageReducer = (state, action) => {
                 error: action.error
             };
         default:
-            throw new Error('GamePage rudecer Error')
+            throw new Error('GamePage ruducer Error')
     }
 };
 
@@ -47,15 +47,18 @@ const GamePage = (props) => {
     const [gamePageState, dispatchgamePage] = useReducer(pageReducer, initialState);
 
     let [chatMessages, setChatMessages] = useState([]);
+    let [roomData, setRoomData] = useState();
 
     useEffect(() => {
         console.log('effect');
-        let room = new URLSearchParams(props.location.search);
-        socket.emit('join', {room: room.get('room')}, (error) => {
+        let roomQuery = new URLSearchParams(props.location.search);
+        socket.emit('join', {room: roomQuery.get('room'), random: roomQuery.get('random')}, ({error}) => {
             if (error) dispatchgamePage({type: ERROR, error});
         });
 
         socket.on('connected', ({player, room, boardState}) => {
+            setRoomData({room, random: roomQuery.get('random')});
+            // props.history.replace(props.location.pathname+'?room='+room)
             dispatchgamePage({
                 type: CONNECTED,
                 player: player,
@@ -80,7 +83,7 @@ const GamePage = (props) => {
         if (message.trim().length !== 0) {
             socket.emit('sendMessage', message, () => {
                 callback();
-            })
+            });
         }
 
     }, []);
@@ -105,7 +108,7 @@ const GamePage = (props) => {
     } else {
         content = (
             <div className={'game-page'}>
-                {/*<h1>{roomId}</h1>*/}
+                {roomData.random==='false' ? <p className='info'>Give this link to your friend <br /> localhost:3000/game?room={roomData.room}</p>:null}
                 <Game player={gamePageState.player} restoredBoardState={gamePageState.boardState}/>
                 <Chat sendMessage={sendMessage} chatMessages={chatMessages}/>
             </div>);

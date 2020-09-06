@@ -1,5 +1,7 @@
 
 .chat {
+    grid-area: chat;
+    /*flex: 0 0 20%;*/
     margin: auto;
     margin-left: 0;
     color: #444;

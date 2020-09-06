@@ -1,11 +1,19 @@
-.game-page{
+.game-page {
     display: grid;
-    grid-template-columns:  2fr 1fr;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 5rem 1fr;
 
-    height: 100%;
+    grid-template-areas: 'message message' 'game chat';
+    /*display: flex;*/
+
+
+    /*height: 100%;*/
 }
-
-.error{
+.info{
+    font-size: 2rem;
+    text-align: center;
+}
+.error {
     height: 100vh;
     font-size: 4rem;
     display: flex;
@@ -15,9 +23,10 @@
 
 
 @media (max-width: 1300px) {
-    .game-page{
+    .game-page {
 
         grid-template-columns: 600px 1fr;
+
         margin: 2rem;
         gap: 2rem;
     }
@@ -25,15 +34,16 @@
 
 @media (max-width: 1000px) {
 
-    .game-page{
+    .game-page {
         grid-template-columns: 1fr;
+        grid-template-areas: 'message' 'game' 'chat';
     }
 
 
 }
 
 @media (max-width: 550px) {
-    .game-page{
+    .game-page {
         grid-template-columns: 1fr;
         margin: 1rem;
     }

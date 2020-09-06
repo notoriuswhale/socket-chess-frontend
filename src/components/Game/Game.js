@@ -1,43 +1,51 @@
-import React, {useEffect} from "react";
-import {Board} from "../Board/Board";
-import * as constants from '../../constants';
-import {socket} from "../../socket"
-import {useDispatch, useSelector} from "react-redux";
+import React, { useEffect } from "react";
+import { Board } from "../Board/Board";
+import * as constants from "../../constants";
+import { socket } from "../../socket";
+import { useDispatch, useSelector } from "react-redux";
 import {
     gameStateSelector,
     isCheckedSelector,
-    possibleMovesSelector
+    possibleMovesSelector,
 } from "../../redux/reducers/gameReducer";
-import {move, restoreGame, select, setPlayer, startGame, unselect} from "../../redux/actions/game";
+import {
+    move,
+    restoreGame,
+    select,
+    setPlayer,
+    startGame,
+    unselect,
+} from "../../redux/actions/game";
 
+const Game = ({ player: playerId, restoredBoardState }) => {
+    let board = useSelector((state) => state.game.board);
+    let whoMoves = useSelector((state) => state.game.whoMoves);
+    let enemy = useSelector((state) => state.game.enemy);
+    let player = useSelector((state) => state.game.player);
 
-const Game = ({player: playerId, restoredBoardState}) => {
-
-    console.log('game');
-    let board = useSelector(state => state.game.board);
-    let whoMoves = useSelector(state => state.game.whoMoves);
-    let enemy = useSelector(state => state.game.enemy);
-    let player = useSelector(state => state.game.player);
-
-    let gameState = useSelector(state => gameStateSelector(state.game));
-    let isChecked = useSelector(state => isCheckedSelector(state.game));
-    let [selected, possibleMoves] = useSelector(state => [state.game.selected, possibleMovesSelector(state.game)]);
+    let gameState = useSelector((state) => gameStateSelector(state.game));
+    let isChecked = useSelector((state) => isCheckedSelector(state.game));
+    let [selected, possibleMoves] = useSelector((state) => [
+        state.game.selected,
+        possibleMovesSelector(state.game),
+    ]);
     let boardDispatch = useDispatch();
 
     useEffect(() => {
         if (board.length === 0) {
-            if (restoredBoardState) boardDispatch(restoreGame(restoredBoardState));
+            if (restoredBoardState)
+                boardDispatch(restoreGame(restoredBoardState));
             else boardDispatch(startGame());
         }
-        const onMove = ({position, destination}) => {
-            console.log('moved');
+        const onMove = ({ position, destination }) => {
+            console.log("moved");
             boardDispatch(move(position, destination));
         };
-        socket.on('move', onMove);
+        socket.on("move", onMove);
 
         return () => {
-            socket.off('move', onMove);
-        }
+            socket.off("move", onMove);
+        };
     }, [boardDispatch, board, restoredBoardState, whoMoves, enemy, player]);
 
     useEffect(() => {
@@ -45,8 +53,12 @@ const Game = ({player: playerId, restoredBoardState}) => {
     }, [boardDispatch, playerId]);
 
     useEffect(() => {
-        if(player === enemy)socket.emit('updateBoardState', {board, whoMoves, enemy,}, () => {
-        });
+        if (player === enemy)
+            socket.emit(
+                "updateBoardState",
+                { board, whoMoves, enemy },
+                () => {}
+            );
     }, [board, enemy, player, whoMoves]);
 
     const onClickHandler = (index) => {
@@ -58,37 +70,49 @@ const Game = ({player: playerId, restoredBoardState}) => {
             return;
         }
         //if selected piece of the same player then reselect
-        if (board[index]?.player === board[selected]?.player && index !== selected) {
+        if (
+            board[index]?.player === board[selected]?.player &&
+            index !== selected
+        ) {
             boardDispatch(select(index));
             return;
         }
-        if ((index === selected || !possibleMoves.includes(index))) {
+        if (index === selected || !possibleMoves.includes(index)) {
             // if clicked on selected piece or illegal move then deselect
             boardDispatch(unselect());
         }
 
         // else move piece
         else {
-            socket.emit('move', {
-                position: selected,
-                destination: index,
-            }, () => {
-            });
+            socket.emit(
+                "move",
+                {
+                    position: selected,
+                    destination: index,
+                },
+                () => {}
+            );
         }
     };
 
     return (
         <>
-            <Board squares={board} possibleMoves={possibleMoves} onClickHandler={onClickHandler}
-                   isChecked={isChecked} player={player}/>
-            {gameState &&
-            <div>GAME ENDED: {enemy === constants.WHITE ? 'WHITE' : 'BLACK'} WINS</div>}
+            <Board
+                squares={board}
+                possibleMoves={possibleMoves}
+                onClickHandler={onClickHandler}
+                isChecked={isChecked}
+                player={player}
+            />
+            {gameState && (
+                <div>
+                    GAME ENDED: {enemy === constants.WHITE ? "WHITE" : "BLACK"}{" "}
+                    WINS
+                </div>
+            )}
         </>
-
     );
-
 };
 
-
 // let memoGame = React.memo(Game);
-export {Game};
+export { Game };

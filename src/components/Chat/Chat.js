@@ -8,12 +8,13 @@ import {ChatControls} from "./ChatControls/ChatControls";
 const Chat = ({sendMessage, chatMessages}) => {
 
     // let inputRef = useRef(null);
-    let messagesEndRef = useRef(null);
+    let messagesContainer = useRef(null);
     let [chatMessage, setChatMessage] = useState('');
     console.log('chat render');
 
     const scrollToBottom = () => {
-        messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+        const scroll = messagesContainer.current.scrollHeight - messagesContainer.current.clientHeight;
+        messagesContainer.current.scrollTo({top:scroll, behavior: "smooth" })
     };
     const onChange = useCallback((event) => {
         setChatMessage(event.target.value);
@@ -32,11 +33,11 @@ const Chat = ({sendMessage, chatMessages}) => {
     return (
         <div className="chat">
             <ChatHeader>Chat</ChatHeader>
-            <div className="chat__messages">
+            <div className="chat__messages" ref={messagesContainer}>
                 {chatMessages.map((v, i) =>{
                     return <ChatMessage key={v+i} message={v}></ChatMessage>;
                 })}
-                <div ref={messagesEndRef} />
+                {/*<div ref={messagesEndRef} />*/}
             </div>
             <ChatControls onSend={onSend}
                           onChange={onChange}
